@@ -1,8 +1,9 @@
 require([
     "esri/Map",
     "esri/views/MapView",
-    "esri/layers/FeatureLayer"
-], function(Map, MapView, FeatureLayer) {
+    "esri/layers/FeatureLayer",
+    "esri/widgets/Editor"
+], function(Map, MapView, FeatureLayer, Editor) {
 
     var map = new Map({
         basemap: "topo-vector"
@@ -17,9 +18,19 @@ require([
 
     // Places feature layer
     var placesLayer = new FeatureLayer({
-        // url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0"
         url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Places/FeatureServer/0"
     });
 
     map.add(placesLayer);
+
+    view.when(function(){
+
+        // editor
+        var editor = new Editor({
+            layer: placesLayer,
+            view: view
+        });
+
+        view.ui.add(editor, "top-right");
+    });
 });
