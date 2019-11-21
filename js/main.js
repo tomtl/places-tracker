@@ -21,7 +21,40 @@ require([
         url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Places/FeatureServer/0"
     });
 
-    map.add(placesLayer);
+    // places with reviews layer
+    var combinedLayer = new MapImageLayer({
+        url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Places/FeatureServer/0",
+        title: "Places and reviews",
+        sublayers: [
+            {
+                title: "Places with reviews",
+                id: 0,
+                source: {
+                    type: "data-layer",
+                    dataSource: {
+                        type: "join-table",
+                        leftTableSource: {
+                            type: "map-layer",
+                            url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Places/FeatureServer/0"
+                            // mapLayerId: 0
+                        },
+                        rightTableSource: {
+                            type: "data-layer",
+                            dataSource: {
+                                type: "table",
+                                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/reviews_csv/FeatureServer/0"
+                            }
+                        },
+                        leftTableKey: "OBJECTID",
+                        rightTableKey: "place_id",
+                        joinType: "left-outer-join"
+                    }
+                }
+            }
+        ]
+    });
+
+    map.add(combinedLayer);
 
     view.when(function(){
 
